@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<style>
+		body {
+			background: black;
+		}
+		/*#hero-list {
+			width: 100%;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+			grid-gap: 1px;
+		}*/
+
+		.hero-block {
+			width: 60px;
+			max-height: fit-content;
+			    border: 5px black solid;
+		}
+		.hero-block img {
+			object-fit: cover;
+			width: 100%;
+			
+		}
+		.hero-items {
+			
+			width: 100%;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+		}
+		.hero-items img {
+			object-fit: cover;
+			width: 100%;
+  			max-height: 100%;
+			
+		}
+	</style>
+</head>
+<body>
+	<div id="hero-list"></div>
+</body>
+
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script>
+	const herolist = {
+		"Abaddon": ["cyclone", "spirit_vessel", "silver_edge", "shivas_guard", "skadi",'orchid','dagon','ethereal_blade','glimmer_cape','force_staff'],
+		"Alchemist": ["solar_crest", "assault", "desolator", "orb_of_corrosion", "spirit_vessel", "skadi", "shivas_guard",'heavens_halberd','sheepstick','ghost','ethereal_blade','glimmer_cape','force_staff','cyclone','aeon_disk','lotus_orb'],
+		"Ancient Apparition": ["black_king_bar",'glimmer_cape','pipe','force_staff','hurricane_pike','invis_sword','silver_edge','manta','cyclone','lotus_orb'],
+		"Anti-Mage": ["rod_of_atos",'silver_edge','ghost','sheepstick','orchid','aeon_disk','black_king_bar','sphere','arcane_boots','guardian_greaves','butterfly','diffusal_blade'],
+		"Arc Warden": ["blink", "invis_sword", "glimmer_cape", 'monkey_king_bar', "basher",'black_king_bar','lotus_orb','witch_blade','revenants_brooch','manta'],
+		"Axe": ['cyclone','silver_edge','vladmir','satanic','force_staff','mekansm','ethereal_blade','spirit_vessel','skadi','lotus_orb'],
+		"Bane": ['lotus_orb','sphere','abyssal_blade','black_king_bar'],
+		"Batrider": ['magic_wand','phase_boots','sphere','force_staff','aeon_disk','blade_mail','mage_slayer','pipe','eternal_shroud','black_king_bar'],
+		"Beastmaster": ['sphere','aeon_disk','bfury','maelstrom','mjollnir','lotus_orb'],
+		"Bloodseeker": ['spirit_vessel', 'skadi', 'shivas_guard', 'lotus_orb','sphere','magic_stick','blade_mail','crimson_guard','heart','guardian_greaves'],
+		"Bounty Hunter": ['cyclone', 'guardian_greaves','lotus_orb','manta','satanic','black_king_bar'],
+		"Brewmaster": ['blink','orchid','sheepstick','black_king_bar','monkey_king_bar'],
+		"Bristleback": ['silver_edge','magic_wand','holy_locket','ghost','manta','satanic','cyclone','lotus_orb','guardian_greaves','assault','solar_crest','vladmir','diffusal_blade'],
+		"Broodmother": ['skadi','shivas_guard','spirit_vessel','ghost','blink','travel_boots','vanguard','abyssal_blade','crimson_guard','radiance','bfury','maelstrom','mjollnir','diffusal_blade','rod_of_atos','lotus_orb'],
+		"Centaur Warrunner": ['radiance','black_king_bar','rod_of_atos','vladmir','mask_of_madness','satanic'],
+		"Chaos Knight": ['rod_of_atos','ghost','shivas_guard','blade_mail','butterfly','manta','sphere','bfury','lotus_orb'],
+		"Chen": ['hand_of_midas','helm_of_the_dominator','diffusal_blade','shivas_guard','dagon','veil_of_discord','bfury','maelstrom','mjollnir','gungir','black_king_bar','manta','butterfly','invis_sword','radiance','spirit_vessel','blink','orchid','sheepstick','skadi','sphere','lotus_orb'],
+		"Clinkz": ['ghost','gungir','blade_mail','heart','sphere','assault','force_staff','ghost','ethereal_blade','cyclone','heavens_halberd'],
+		"Clockwerk": ['force_staff','medallion_of_courage','solar_crest','hurricane_pike','cyclone','wind_waker','black_king_bar'],
+		"Crystal Maiden": ['black_king_bar','basher','abyssal_blade','orchid','sphere','lotus_orb','blade_mail'],
+		"Dark Seer": ['cyclone','orchid','blade_mail','black_king_bar','radiance'],
+		"Dark Willow": ['lotus_orb','gungir','blade_mail','glimmer_cape','dragon_lance','black_king_bar','bloodthorn','helm_of_the_dominator'],
+		"Dawnbreaker": ['abyssal_blade','cyclone','force_staff','rod_of_atos','spirit_vessel','shivas_guard','skadi','black_king_bar','sheepstick','crimson_guard','assault','orchid'],
+		"Dazzle": ['cyclone','orchid','diffusal_blade','dagon','ghost'],
+		"Death Prophet": ['nullifier','spirit_vessel','shivas_guard','skadi','mage_slayer','blade_mail','orchid','diffusal_blade','cyclone','guardian_greaves','lotus_orb','manta'],
+		"Disruptor": ['manta','wind_waker','black_king_bar','pipe','blink','sphere','lotus_orb'],
+		"Doom": ['sphere','mekansm','guardian_greaves','lotus_orb','glimmer_cape','orchid'],
+		"Dragon Knight": ['silver_edge','spirit_vessel','shivas_guard','skadi','mekansm','desolator','medallion_of_courage','solar_crest','lotus_orb','sphere'],
+		"Drow Ranger": ['heavens_halberd','blink','blade_mail','black_king_bar','manta','cyclone','rod_of_atos','invis_sword','silver_edge'],
+		"Earth Spirit": ['rod_of_atos','orchid','sheepstick','black_king_bar','pipe'],
+		"Earthshaker": ['silver_edge','black_king_bar','pipe','radiance','cyclone','rod_of_atos','sheepstick','diffusal_blade'],
+		"Elder Titan": ['force_staff','aeon_disk','sheepstick','abyssal_blade','cyclone','orchid','blink','medallion_of_courage','solar_crest','assault','shivas_guard'],
+		"Ember Spirit": ['orchid','sheepstick','butterfly','radiance','crimson_guard','cyclone','nullifier','abyssal_blade','assault','crimson_guard','satanic','heart','skadi','cyclone'],
+		"Enchantress": ['echo_sabre','spirit_vessel','skadi','shivas_guard','silver_edge','blade_mail','moon_shard'],
+		"Enigma": ['abyssal_blade','wind_waker','radiance','cyclone','sphere','lotus_orb','blade_mail','rod_of_atos','blink','spirit_vessel','satanic','pipe'],
+		"Faceless Void": ['spirit_vessel','shivas_guard','skadi','rod_of_atos','cyclone','wind_waker','ghost','aeon_disk','orchid','sheepstick','crimson_guard','ethereal_blade','blade_mail'],
+		"Grimstroke": ['invis_sword','manta','cyclone','black_king_bar','lotus_orb','force_staff','pipe','glimmer_cape'],
+		"Gyrocopter": ['hurricane_pike','silver_edge','heavens_halberd','blade_mail','black_king_bar','crimson_guard','assault','lotus_orb'],
+		"Hoodwink": ['quelling_blade','force_staff','cyclone','lotus_orb','monkey_king_bar','silver_edge','blade_mail'],
+		"Huskar": ['silver_edge','heavens_halberd','spirit_vessel','skadi','shivas_guard','lotus_orb','guardian_greaves','pipe','black_king_bar','blink','sphere','manta'],
+		"Invoker": ['black_king_bar','pipe','cyclone','glimmer_cape','blade_mail','force_staff','diffusal_blade','lotus_orb'],
+		"Io": ['dagon','veil_of_discord','blink','spirit_vessel','shivas_guard','skadi','black_king_bar','rod_of_atos','gungir','orchid','sheepstick','cyclone'],
+		"Jakiro": ['black_king_bar','pipe','glimmer_cape','blade_mail','orchid','eternal_shroud'],
+		"Juggernaut": ['ghost','ethereal_blade','vanguard','crimson_guard','glimmer_cape','invis_sword','wind_lace','aeon_disk','cyclone','lotus_orb','force_staff','hurricane_pike','glimmer_cape','basher','abyssal_blade'],
+		"Keeper of the Light": ['black_king_bar','manta','satanic','pipe','blade_mail','cyclone','lotus_orb','force_staff'],
+		"Kunkka": ['crimson_guard','assault','solar_crest','vladmir','cyclone','magic_wand','black_king_bar','guardian_greaves'],
+		"Legion Commander": ['sphere','heavens_halberd','ghost','ethereal_blade','cyclone','solar_crest','blade_mail','mekansm','aeon_disk','satanic'],
+		"Leshrac": ['pipe','mage_slayer','blade_mail','black_king_bar','diffusal_blade','nullifier','skadi','shivas_guard'],
+		"Lich": ['lotus_orb','cyclone','glimmer_cape','invis_sword','blade_mail','pipe','black_king_bar','manta','force_staff','sphere'],
+		"Lifestealer": ['ghost','force_staff','blink','shivas_guard','orchid','ethereal_blade','manta','sheepstick','heavens_halberd','medallion_of_courage','solar_crest','assault','silver_edge'],
+		"Lina": ['cyclone','manta','black_king_bar','blade_mail','eternal_shroud','pipe','sphere','lotus_orb'],
+		"Lion": ['cyclone','manta','lotus_orb','black_king_bar','orchid'],
+		"Lone Druid": ['solar_crest','desolator','assault','silver_edge','lotus_orb','ghost','heavens_halberd'],
+		"Luna": ['blade_mail','glimmer_cape','invis_sword','silver_edge','black_king_bar','vanguard','abyssal_blade','crimson_guard','pipe','eternal_shroud','lotus_orb'],
+		"Lycan": ['cyclone','crimson_guard','heavens_halberd','blade_mail','ghost','ethereal_blade','black_king_bar','rod_of_atos'],
+		"Magnus": ['rod_of_atos','cyclone','orchid','force_staff','radiance','black_king_bar'],
+		"Marci": ['rod_of_atos','force_staff','ghost','blade_mail','heavens_halberd','ethereal_blade','ghost','cyclone','abyssal_blade','sheepstick','orchid','diffusal_blade'],
+		"Mars": ['blink','black_king_bar','silver_edge','quelling_blade','glimmer_cape'],
+		"Medusa": ['diffusal_blade','phase_boots','heavens_halberd','silver_edge','blade_mail','spirit_vessel','solar_crest'],
+		"Meepo": ['meteor_hammer','orchid','rod_of_atos','shivas_guard','black_king_bar','sheepstick','abyssal_blade','manta','lotus_orb','guardian_greaves'],
+		"Mirana": ['rod_of_atos','orchid','black_king_bar','pipe','manta'],
+		"Monkey King": ['urn_of_shadows','quelling_blade','force_staff','shivas_guard','cyclone','silver_edge','vanguard','crimson_guard','orb_of_venom','radiance'],
+		"Morphling": ['spirit_vessel','rod_of_atos','sheepstick','black_king_bar','orchid','bloodthorn','manta','heavens_halberd','revenants_brooch','blink','lotus_orb'],
+		"Muerta": ['revenants_brooch','black_king_bar','pipe','blade_mail'],
+		"Naga Siren": ['crimson_guard','guardian_greaves','satanic','cyclone','lotus_orb','manta','dagon','sheepstick','blade_mail','ghost','bfury','maelstrom','black_king_bar','sphere'],
+		"Nature's Prophet": ['quelling_blade','bfury','force_staff','orchid','rod_of_atos','travel_boots','heavens_halberd','manta','maelstrom','radiance'],
+		"Necrophos": ['sphere','magic_wand','glimmer_cape','wind_waker','nullifier','spirit_vessel','skadi','shivas_guard','revenants_brooch','nullifier','cyclone','lotus_orb','black_king_bar','sheepstick','silver_edge','dagon','diffusal_blade'],
+		"Night Stalker": ['black_king_bar','force_staff','cyclone','manta','lotus_orb','sphere','ghost','ethereal_blade','silver_edge'],
+		"Nyx Assassin": ['lotus_orb','force_staff','aeon_disk','cyclone','wind_waker','skadi','heart','bloodstone','pipe','eternal_shroud','lotus_orb','black_king_bar'],
+		"Ogre Magi": ['lotus_orb','black_king_bar','pipe','orchid','hurricane_pike','silver_edge','manta'],
+		"Omniknight": ['nullifier','cyclone','spirit_vessel','skadi','shivas_guard','revenants_brooch','orchid','wind_waker','radiance','dagon','veil_of_discord'],
+		"Oracle": ['spirit_vessel','nullifier','cyclone','black_king_bar','orchid','glimmer_cape','manta','sheepstick'],
+		"Outworld Destroyer": ['diffusal_blade','black_king_bar','orchid','skadi','shivas_guard','guardian_greaves','magic_wand','pipe','blink','lotus_orb'],
+		"Pangolier": ['rod_of_atos','black_king_bar','abyssal_blade','cyclone','force_staff'],
+		"Phantom Assassin": ['monkey_king_bar','magic_wand','bloodthorn','maelstrom','mjollnir','gungir','ghost','aeon_disk','blade_mail','silver_edge','revenants_brooch','rod_of_atos','nullifier','cyclone','lotus_orb','witch_blade','sheepstick','glimmer_cape','solar_crest','heavens_halberd'],
+		"Phantom Lancer": ['crimson_guard','rod_of_atos','mjollnir','black_king_bar','armlet','assault','solar_crest','helm_of_the_dominator','vladmir','cyclone','aeon_disk','bfury','radiance','heavens_halberd','silver_edge','maelstrom','orchid','shivas_guard','magic_wand','nullifier','gungir','lotus_orb','guardian_greaves'],
+		"Phoenix": ['cyclone','sheepstick','force_staff','rod_of_atos','orchid','ancient_janggo','assault','black_king_bar','moon_shard','echo_sabre','pipe'],
+		"Primal Beast": ['rod_of_atos','black_king_bar','wind_lace','glimmer_cape','force_staff','basher','pipe','cyclone'],
+		"Puck": ['rod_of_atos','wind_waker','force_staff','manta','black_king_bar','sheepstick','orchid','nullifier','dagon'],
+		"Pudge": ['lotus_orb','sphere','force_staff','manta','diffusal_blade','glimmer_cape','invis_sword','cyclone','blink'],
+		"Pugna": ['revenants_brooch','pipe','spirit_vessel','skadi','shivas_guard','nullifier','black_king_bar','manta','satanic','force_staff','glimmer_cape','pipe','black_king_bar','blink','sphere','lotus_orb','cyclone'],
+		"Queen of Pain": ['invis_sword','blink','rod_of_atos','blade_mail','orchid','sheepstick','abyssal_blade','lotus_orb'],
+		"Razor": ['force_staff','lotus_orb','ghost','cyclone','black_king_bar','monkey_king_bar','gungir','silver_edge','sphere'],
+		"Riki": ['silver_edge','force_staff','ghost','invis_sword'],
+		"Rubick": ['black_king_bar','sphere'],
+		"Sand King": ['rod_of_atos','black_king_bar','orchid','sphere','lotus_orb','blade_mail'],
+		"Shadow Demon": ['magic_wand','cyclone','lotus_orb','guardian_greaves','sphere','force_staff'],
+		"Shadow Fiend": ['black_king_bar','cyclone','pipe','eternal_shroud','lotus_orb','orchid','sheepstick','abyssal_blade','assault'],
+		"Shadow Shaman": ['phase_boots','diffusal_blade','lotus_orb','orchid','force_staff','sphere','dragon_lance','black_king_bar','abyssal_blade'],
+		"Silencer": ['black_king_bar','lotus_orb','manta','guardian_greaves','bottle','magic_wand','black_king_bar','cyclone','orchid','blade_mail'],
+		"Skywrath Mage": ['magic_wand','force_staff','black_king_bar','manta','guardian_greaves','satanic','lotus_orb','pipe','glimmer_cape','blade_mail','cyclone','orchid'],
+		"Slardar": ['lotus_orb','guardian_greaves','manta','satanic','ghost','shivas_guard','radiance','butterfly','heavens_halberd','solar_crest','diffusal_blade'],
+		"Slark": ['force_staff','heavens_halberd','phase_boots','manta','black_king_bar','silver_edge','ghost','gungir','abyssal_blade','shivas_guard','sheepstick'],
+		"Snapfire": ['cyclone','lotus_orb','rod_of_atos','blade_mail','black_king_bar','diffusal_blade'],
+		"Sniper": ['blade_mail','blink','silver_edge','cyclone','glimmer_cape','manta','sphere','lotus_orb'],
+		"Spectre": ['silver_edge','mage_slayer','sheepstick','butterfly','radiance','heavens_halberd','bfury','mjollnir','crimson_guard'],
+		"Spirit Breaker": ['sphere','glimmer_cape','rod_of_atos','cyclone','force_staff','ghost','ethereal_blade','sheepstick','abyssal_blade','heavens_halberd'],
+		"Storm Spirit": ['sheepstick','rod_of_atos','ghost','diffusal_blade','cyclone','orchid','aeon_disk'],
+		"Sven": ['lotus_orb','blink','invis_sword','cyclone','armlet','assault','solar_crest','vladmir','force_staff','ghost','ethereal_blade','heavens_halberd','rod_of_atos','blade_mail','heart','sheepstick','sphere','radiance','abyssal_blade','guardian_greaves'],
+		"Techies": ['aeon_disk','invis_sword','glimmer_cape','force_staff','cyclone','pipe','black_king_bar','orchid','sheepstick','helm_of_the_dominator','manta'],
+		"Templar Assassin": ['radiance','spirit_vessel','maelstrom','monkey_king_bar','orchid','revenants_brooch','ghost','cyclone','force_staff'],
+		"Terrorblade": ['lotus_orb','cyclone','maelstrom','shivas_guard','dagon','sheepstick','sphere','orchid','wind_waker','nullifier','bfury','gungir','mjollnir','revenants_brooch','vanguard','abyssal_blade','crimson_guard','assault','ghost','ethereal_blade','satanic','basher','black_king_bar','monkey_king_bar','heavens_halberd'],
+		"Tidehunter": ['magic_wand','force_staff','blink','black_king_bar','silver_edge','diffusal_blade'],
+		"Timbersaw": ['rod_of_atos','orchid','silver_edge','spirit_vessel','skadi','shivas_guard','quelling_blade','sheepstick','diffusal_blade'],
+		"Tinker": ['helm_of_the_dominator','hand_of_midas','black_king_bar','monkey_king_bar','lotus_orb','blink','invis_sword','glimmer_cape','blade_mail','sphere'],
+		"Tiny": ['fluffy_hat','fluffy_hat','black_king_bar','desolator','assault','shivas_guard'],
+		"Treant Protector": ['quelling_blade','black_king_bar','manta','lotus_orb','guardian_greaves','satanic','force_staff','hurricane_pike'],
+		"Troll Warlord": ['black_king_bar','force_staff','ghost','cyclone','heavens_halberd','blade_mail','silver_edge','bloodthorn','sheepstick'],
+		"Tusk": ['rod_of_atos','lotus_orb','force_staff','blade_mail','manta'],
+		"Underlord": ['silver_edge','rod_of_atos','force_staff','diffusal_blade','shivas_guard','pipe','travel_boots_2'],
+		"Undying": ['magic_wand','mjollnir','crimson_guard','manta','orchid','sheepstick','black_king_bar','lotus_orb'],
+		"Ursa": ['force_staff','cyclone','sheepstick','nullifier','aeon_disk','ghost','heavens_halberd','ethereal_blade','silver_edge','butterfly'],
+		"Vengeful Spirit": ['silver_edge','lotus_orb','sphere','diffusal_blade','assault'],
+		"Venomancer": ['guardian_greaves','lotus_orb','pipe','glimmer_cape','black_king_bar','blade_mail'],
+		"Viper": ['guardian_greaves','rod_of_atos','lotus_orb','black_king_bar','blink','ghost','ethereal_blade','glimmer_cape','force_staff','silver_edge','manta','diffusal_blade','sphere'],
+		"Visage": ['crimson_guard','assault','shivas_guard','butterfly','heavens_halberd','black_king_bar','radiance','lotus_orb'],
+		"Void Spirit": ['orchid','sheepstick','lotus_orb','rod_of_atos','pipe','black_king_bar'],
+		"Warlock": ['silver_edge','boots_of_bearing','orchid','diffusal_blade','cyclone','blink'],
+		"Weaver": ['orchid','abyssal_blade','sheepstick','glimmer_cape','invis_sword','buckler','ghost'],
+		"Windranger": ['monkey_king_bar','blade_mail','bloodthorn','nullifier','cyclone','ethereal_blade','ghost','sheepstick','heavens_halberd','crimson_guard','lotus_orb','rod_of_atos','abyssal_blade','orchid','sphere','blade_mail'],
+		"Winter Wyvern": ['revenants_brooch','ethereal_blade','dagon','spirit_vessel','wind_waker','meteor_hammer','overwhelming_blink','gungir','mjollnir','radiance','veil_of_discord','sphere','black_king_bar','lotus_orb'],
+		"Witch Doctor": ['ghost','invis_sword','glimmer_cape','orchid','radiance','butterfly','heavens_halberd','black_king_bar','lotus_orb','cyclone','armlet','assault','guardian_greaves','medallion_of_courage','solar_crest','helm_of_the_dominator','vladmir'],
+		"Wraith King": ['diffusal_blade','desolator','manta','sheepstick','spirit_vessel','skadi','bfury','mjollnir','heavens_halberd','ghost'],
+		"Zeus": ['magic_wand','glimmer_cape','pipe','black_king_bar','orchid','bloodthorn','blade_mail','diffusal_blade','cyclone','manta'],
+	}
+	const list = document.getElementById('hero-list');
+	let hero_temp = ""
+	Object.keys(herolist).forEach(hero => {
+		const block = document.createElement('div');
+		block.classList.add('hero-block');
+
+		const items = document.createElement('div');
+		items.classList.add('hero-items');
+		herolist[hero].forEach((item) => {
+			const img = document.createElement('img');
+			img.src = `https://cdn.dota2.com/apps/dota2/images/items/${item}_lg.png`;
+			items.appendChild(img);
+		})
+
+		const img = document.createElement('img');
+		hero_temp = hero.toLowerCase().replace(/ /g,"_");
+		switch(hero_temp) {
+			case "anti-mage": hero_temp = "antimage"; break;
+			case "centaur_warrunner": hero_temp = "centaur"; break;
+			case "clockwerk": hero_temp = "rattletrap"; break;
+			case "doom": hero_temp = "doom_bringer"; break;
+			case "io": hero_temp = "wisp"; break;
+			case "lifestealer": hero_temp = "life_stealer"; break;
+			case "magnus": hero_temp = "magnataur"; break;
+			case "nature's_prophet": hero_temp = "furion"; break;
+			case "necrophos": hero_temp = "necrolyte"; break;
+			case "outworld_destroyer": hero_temp = "obsidian_destroyer"; break;
+			case "queen_of_pain": hero_temp = "queenofpain"; break;
+			case "shadow_fiend": hero_temp = "nevermore"; break;
+			case "timbersaw": hero_temp = "shredder"; break;
+			case "treant_protector": hero_temp = "treant"; break;
+			case "underlord": hero_temp = "abyssal_underlord"; break;
+			case "vengeful_spirit": hero_temp = "vengefulspirit"; break;
+			case "windranger": hero_temp = "windrunner"; break;
+			case "wraith_king": hero_temp = "skeleton_king"; break;
+			case "zeus": hero_temp = "zuus"; break;
+		}
+		img.src = `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${hero_temp}.png`;
+		img.alt = hero;
+		block.appendChild(img);
+		block.appendChild(items);
+		list.appendChild(block);
+
+	});
+
+	setTimeout(() => {
+
+		var elem = document.querySelector('#hero-list');
+		var msnry = new Masonry( elem, {
+		  // options
+		  itemSelector: '.hero-block',
+		});
+	},200)
+
+</script>
+</html>
