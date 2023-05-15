@@ -16,9 +16,10 @@
 		}*/
 
 		.hero-block {
-			width: 60px;
+			width: 57px;
 			max-height: fit-content;
 			    border: 5px black solid;
+			opacity: 0.3;
 		}
 		.hero-block img {
 			object-fit: cover;
@@ -37,12 +38,26 @@
   			max-height: 100%;
 			
 		}
+		.highlight {
+			opacity: 1!important;
+		}
+		.search {
+		    display: flex;
+			justify-content: center;
+			margin: 1rem 0;
+		}
+		.search input {
+			width: 30%;
+		}
 	</style>
 </head>
 <body>
+	<div class="search">
+		<input id="searchInput" /> 
+	</div>
 	<div id="hero-list"></div>
 </body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <script>
 	const herolist = {
@@ -176,6 +191,8 @@
 	Object.keys(herolist).forEach(hero => {
 		const block = document.createElement('div');
 		block.classList.add('hero-block');
+		block.classList.add('highlight');
+		block.setAttribute('data-name',hero);
 
 		const items = document.createElement('div');
 		items.classList.add('hero-items');
@@ -222,8 +239,31 @@
 		var msnry = new Masonry( elem, {
 		  // options
 		  itemSelector: '.hero-block',
+		  fitWidth: true
 		});
 	},200)
 
+</script>
+<script>
+	 $(document).ready(function() {
+      $('#searchInput').on('input', function() {
+
+        var searchQuery = $(this).val().toLowerCase();
+        if(!searchQuery) {
+        	$('.hero-block').each(function() {
+            	$(this).addClass('highlight');
+        	});
+        }
+        $('.hero-block').each(function() {
+          var heroName = $(this).data('name').toLowerCase();
+
+          if (heroName.includes(searchQuery)) {
+            $(this).addClass('highlight');
+          } else {
+            $(this).removeClass('highlight');
+          }
+        });
+      });
+    });
 </script>
 </html>
